@@ -47,6 +47,7 @@ export const getPlaceholderBounds = (update) => {
     }, 0);
 
   return {
+    content: draggedDOM.textContent,
     clientHeight,
     clientWidth,
     clientY,

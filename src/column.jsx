@@ -27,36 +27,38 @@ const TaskList = styled.div`
   position: relative;
 `;
 
+const Placeholder = styled.div`
+  box-sizing: border-box;
+  position: absolute;
+  top: ${props => props.placeholderProps.clientY}px;
+  left: ${props => props.placeholderProps.clientX}px;
+  width: ${props => props.placeholderProps.clientWidth}px;
+  border: 1px dashed grey;
+  color: grey;
+  borderRadius: 2px;
+  padding: 7px;
+  opacity: 0.6;
+`
 
+const renderTask = (task, index) => (
+  <Task key={task.id} task={task} index={index} />
+);
 
 const Column = ({column, tasks, isDropDisabled, placeholderProps}) => {
   return (
     <Container>
       <Title>{column.title}</Title>
-      <Droppable
-        droppableId={column.id}
-        isDropDisabled={isDropDisabled}
-      >
+      <Droppable droppableId={column.id} isDropDisabled={isDropDisabled}>
         {(provided, snapshot) => (
           <TaskList
             ref={provided.innerRef}
             isDraggingOver={snapshot.isDraggingOver}
             {...provided.droppableProps}
           >
-            {tasks.map((task, index) => (
-              <Task key={task.id} task={task} index={index} />
-            ))}
+            {tasks.map(renderTask)}
             {provided.placeholder}
             {placeholderProps && snapshot.isDraggingOver && (
-              <div style={{
-                position: "absolute",
-                top: placeholderProps.clientY,
-                left: placeholderProps.clientX,
-                height: placeholderProps.clientHeight,
-                width: placeholderProps.clientWidth,
-                border: "1px solid lightgrey",
-                borderRadius: 2,
-              }}/>
+              <Placeholder placeholderProps={placeholderProps}>{placeholderProps.content}</Placeholder>
             )}
           </TaskList>
         )}

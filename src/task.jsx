@@ -33,8 +33,7 @@ const Task = ({ task, index }) => {
         >
           {task.content}
         </Container>
-      )
-      }
+      )}
     </Draggable>
   );
 }

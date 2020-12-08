@@ -6,25 +6,18 @@ import styled from 'styled-components';
 
 import Column from './column'
 import initialData from './initial-data';
+import {getPlaceholderBounds} from './utils/placeholder';
 
 const Container = styled.div`
   display: flex;
-  
 `
 
 const App = () => {
   const [state, setState] = useState(initialData);
-
-  const onDragStart = start => {
-    const homeIndex = state.columnOrder.indexOf(start.source.droppableId);
-
-    setState({
-      ...state,
-      homeIndex,
-    })
-  }
+  const [placeholderProps, setPlaceholderProps] = useState(null);
 
   const onDragEnd = result => {
+    setPlaceholderProps(null);
     const {destination, source, draggableId} = result;
 
     setState({
@@ -91,10 +84,18 @@ const App = () => {
     setState(newState);
   }
 
+  const onDragUpdate = update => {
+    if(!update.destination){
+      return;
+    }
+
+    setPlaceholderProps(getPlaceholderBounds(update));
+  }
+
   return (
     <DragDropContext
       onDragEnd={onDragEnd}
-      onDragStart={onDragStart}
+      onDragUpdate={onDragUpdate}
     >
       <Container>
         {state.columnOrder.map((columnId, index) => {
@@ -110,6 +111,7 @@ const App = () => {
               column={column}
               tasks={tasks}
               isDropDisabled={isDropDisabled}
+              placeholderProps={placeholderProps}
             />
           )
         })}

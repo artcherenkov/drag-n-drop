@@ -24,9 +24,12 @@ const TaskList = styled.div`
   transition: background-color 0.2s ease; 
   flex-grow: 1;
   min-height: 100px;
+  position: relative;
 `;
 
-const Column = ({column, tasks, isDropDisabled}) => {
+
+
+const Column = ({column, tasks, isDropDisabled, placeholderProps}) => {
   return (
     <Container>
       <Title>{column.title}</Title>
@@ -44,6 +47,17 @@ const Column = ({column, tasks, isDropDisabled}) => {
               <Task key={task.id} task={task} index={index} />
             ))}
             {provided.placeholder}
+            {placeholderProps && snapshot.isDraggingOver && (
+              <div style={{
+                position: "absolute",
+                top: placeholderProps.clientY,
+                left: placeholderProps.clientX,
+                height: placeholderProps.clientHeight,
+                width: placeholderProps.clientWidth,
+                border: "1px solid lightgrey",
+                borderRadius: 2,
+              }}/>
+            )}
           </TaskList>
         )}
       </Droppable>
